@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    fetch("https://admin-be.herokuapp.com/api/v1/login", {
+    fetch("https://item-um.herokuapp.com/api/login", {
       method: "POST",
       body: JSON.stringify(details),
       headers: { "Content-Type": "application/json" },
@@ -32,6 +32,7 @@ const Login = () => {
       .then((result) => {
         setLoading(false);
         if (result.msg) {
+          console.log(result);
           setError(result.msg);
           setShow(true);
         } else if (result.user.status == false) {
@@ -41,7 +42,7 @@ const Login = () => {
           const token = result.user.token;
           localStorage.setItem("authToken", token);
           localStorage.setItem("email", email);
-          navigate("/");
+          navigate("/collections");
         }
       })
       .catch((err) => setLoading(false));

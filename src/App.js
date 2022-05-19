@@ -5,6 +5,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
+import Collection from "./components/Collection";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/home" element={<Home />} />
+            <Route path="/collections" element={<Collection />} />
             <Route path={"/admin"} element={<AdminPanel />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

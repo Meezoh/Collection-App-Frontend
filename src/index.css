@@ -35,10 +35,6 @@ h1 {
   margin-right: 8rem;
 }
 
-.btn {
-  margin-left: 1rem;
-}
-
 .Signup,
 .Login {
   margin: 5rem auto;
@@ -71,7 +67,8 @@ h1 {
 }
 
 .admin-panel,
-.title {
+.title,
+.collection {
   margin: 2rem auto;
   text-align: center;
 }
