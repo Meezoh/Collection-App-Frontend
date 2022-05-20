@@ -3,9 +3,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Alert from "react-bootstrap/Alert";
 import { Link } from "react-router-dom";
+import Collection from "./Collection";
+import GlobalContext from "../contexts/GlobalContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +17,7 @@ const Login = () => {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
-  // validate the name and password
+  const { userId, setUserId } = useContext(GlobalContext);
 
   const details = { email, password };
 
@@ -25,14 +27,15 @@ const Login = () => {
 
     fetch("https://item-um.herokuapp.com/api/login", {
       method: "POST",
+      redirect: "manual",
       body: JSON.stringify(details),
       headers: { "Content-Type": "application/json" },
     })
       .then((res) => res.json())
       .then((result) => {
         setLoading(false);
+        setUserId(result.user._id);
         if (result.msg) {
-          console.log(result);
           setError(result.msg);
           setShow(true);
         } else if (result.user.status == false) {
@@ -42,11 +45,14 @@ const Login = () => {
           const token = result.user.token;
           localStorage.setItem("authToken", token);
           localStorage.setItem("email", email);
-          navigate("/collections");
         }
       })
       .catch((err) => setLoading(false));
   };
+
+  useEffect(() => {
+    if (userId != null) navigate("/collections");
+  }, [userId]);
 
   return (
     <div className="Login">
@@ -97,6 +103,7 @@ const Login = () => {
       <p className="register-here">
         Don't have an account? <Link to="/signup">Register here</Link>
       </p>
+      {/* {userId && <Collection userId={userId} />} */}
     </div>
   );
 };

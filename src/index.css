@@ -36,12 +36,16 @@ h1 {
 }
 
 .Signup,
-.Login {
+.Login,
+.add-collection {
   margin: 5rem auto;
   max-width: 35rem;
   padding: 4rem;
   border: 3px solid rgb(146, 142, 142);
   border-radius: 1rem;
+}
+.select-collection {
+  margin-bottom: 1rem;
 }
 .name {
   margin-bottom: 1.1rem;

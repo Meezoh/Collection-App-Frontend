@@ -1,5 +1,4 @@
-import { ItemProvider } from "./contexts/ItemContext";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AdminPanel from "./components/AdminPanel";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
@@ -10,18 +9,16 @@ import Collection from "./components/Collection";
 const App = () => {
   return (
     <div className="App">
-      <ItemProvider>
-        <NavBar />
-        <Router>
-          <Routes>
-            <Route path="/home" element={<Home />} />
-            <Route path="/collections" element={<Collection />} />
-            <Route path={"/admin"} element={<AdminPanel />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-          </Routes>
-        </Router>
-      </ItemProvider>
+      <NavBar />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/collections" element={<Collection />} />
+          <Route path={"/admin"} element={<AdminPanel />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 };

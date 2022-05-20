@@ -10,7 +10,7 @@ const NavBar = () => {
     <div>
       <Navbar bg="light" expand="lg">
         <Container fluid>
-          <Navbar.Brand href="/home">Item Collection App</Navbar.Brand>
+          <Navbar.Brand href="/">Item Collection App</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
             <Nav
@@ -20,7 +20,7 @@ const NavBar = () => {
             >
               <Nav.Link href="/admin">Admin Panel</Nav.Link>
               <Nav.Link href="/login">Sign in</Nav.Link>
-              {/* <Nav.Link href="/signup">Sign up</Nav.Link> */}
+              <Nav.Link href="/signup">Sign up</Nav.Link>
               {/* <Nav.Link href="#" disabled>
                 Link
               </Nav.Link> */}
