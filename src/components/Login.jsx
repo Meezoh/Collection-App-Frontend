@@ -103,7 +103,6 @@ const Login = () => {
       <p className="register-here">
         Don't have an account? <Link to="/signup">Register here</Link>
       </p>
-      {/* {userId && <Collection userId={userId} />} */}
     </div>
   );
 };

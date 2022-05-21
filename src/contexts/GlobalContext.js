@@ -13,7 +13,19 @@ export function GlobalProvider({ children }) {
     updateKollectionId(id);
   };
 
-  const contexts = { userId, setUserId, kollectionId, setKollectionId };
+  const [kollection, updateKollection] = useState(Object);
+  const setKollection = (collection) => {
+    updateKollection(collection);
+  };
+
+  const contexts = {
+    userId,
+    setUserId,
+    kollectionId,
+    setKollectionId,
+    kollection,
+    setKollection,
+  };
 
   return (
     <GlobalContext.Provider value={contexts}>{children}</GlobalContext.Provider>

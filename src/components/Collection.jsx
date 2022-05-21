@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import collectionArr from "../util/collectionTopics";
-
+import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -19,19 +19,23 @@ const Collection = () => {
   const navigate = useNavigate();
 
   const [kollections, setKollections] = useState([]);
-  const [name, setName] = useState("");
-  const [topic, setTopic] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newTopic, setNewTopic] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [newImage, setNewImage] = useState("");
 
-  const { userId, kollectionId, setKollectionId } = useContext(GlobalContext);
+  const { userId, kollectionId, setKollectionId, kollection, setKollection } =
+    useContext(GlobalContext);
+
+  // const { name, topic, description, image, selected, _id: id } = kollection;
 
   useEffect(() => {
     if (!token) navigate("/login");
   }, []);
 
-  const details = { name, topic, description };
+  const details = { newName, newTopic, newDescription, newImage };
 
+  // Handle form submit
   const handleCollection = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -48,18 +52,37 @@ const Collection = () => {
       .then((data) => {
         setLoading(false);
         setKollectionId(data.newKollection._id);
+        // [...kollections, data.newkollection];
       })
       .catch((err) => console.log(err));
   };
 
+  // Load all of User's collections
   useEffect(() => {
     fetch("https://item-um.herokuapp.com/api/collections/user/" + userId, {
       headers: { "x-access-token": token },
     })
       .then((res) => res.json())
-      .then((data) => setKollections(data.kollections))
+      .then((data) => {
+        setKollections(data.kollections);
+      })
       .catch((err) => console.log(err));
-  }, []);
+  }, [userId]);
+
+  // Handle Select to update each collection
+  const handleSelect = (selected, id) => {
+    console.log(id);
+    fetch("https://item-um.herokuapp.com/api/collections/" + id, {
+      method: "PATCH",
+      body: JSON.stringify({ selected: !selected }),
+      headers: { "Content-Type": "application/json", "x-access-token": token },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setUpdate(!update);
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="collection">
@@ -70,7 +93,7 @@ const Collection = () => {
           <Form.Control
             className="name"
             placeholder="Name your collection"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setNewName(e.target.value)}
             required
           />
         </Col>
@@ -83,9 +106,9 @@ const Collection = () => {
               rows={3}
               type="text"
               placeholder="Description"
-              value={description}
+              value={newDescription}
               required
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setNewDescription(e.target.value)}
             />
             {/* <ReactMarkdown children={description} /> */}
           </Col>
@@ -94,7 +117,7 @@ const Collection = () => {
         <Form.Select
           className="select-collection"
           aria-label="Default select example"
-          onChange={(e) => setTopic(e.target.value)}
+          onChange={(e) => setNewTopic(e.target.value)}
         >
           <option>Select a topic</option>
           {collectionArr.map((collection, i) => {
@@ -111,7 +134,7 @@ const Collection = () => {
             <Form.Control
               type="file"
               placeholder="Topic"
-              onChange={(e) => setImage(e.target.value)}
+              onChange={(e) => setNewImage(e.target.value)}
             />
           </Col>
         </Form.Group>
@@ -133,33 +156,27 @@ const Collection = () => {
           </tr>
         </thead>
         <tbody>
-          {/* {users &&
-            users.map((user, i) => {
-              const {
-                name,
-                email,
-                lastLoggedIn,
-                createdAt,
-                status,
-                _id,
-                selected,
-              } = user;
-              let newId = i + 1;
-              return (
-                <User
-                  key={i}
-                  name={name}
-                  email={email}
-                  lastLoggedIn={lastLoggedIn}
-                  createdAt={createdAt}
-                  status={status}
-                  selected={selected}
-                  id={_id}
-                  newId={newId}
-                  handleSelect={handleSelect}
-                />
-              );
-            })} */}
+          {kollections.map((kollection, i) => {
+            return (
+              <tr>
+                {/* <Link to="/items"> */}
+                <td>
+                  <div className="mb-3">
+                    <Form.Check
+                      type="checkbox"
+                      // onClick={() => handleSelect(selected, id)}
+                    />
+                  </div>
+                </td>
+                <td>{i + 1}</td>
+                <td>{kollection.name}</td>
+                <td>{kollection.topic}</td>
+                <td>{kollection.description}</td>
+                <td>{kollection.image || null}</td>
+                {/* </Link> */}
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
     </div>
