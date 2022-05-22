@@ -98,6 +98,7 @@ const collectionArr = [
   "Newspapers",
   "Nutcrackers",
   "Old Tools",
+  "Others",
   "Paperweights",
   "Photographs",
   "Picture Frames",

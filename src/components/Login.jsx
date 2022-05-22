@@ -6,7 +6,6 @@ import { useNavigate } from "react-router";
 import { useEffect, useState, useContext } from "react";
 import Alert from "react-bootstrap/Alert";
 import { Link } from "react-router-dom";
-import Collection from "./Collection";
 import GlobalContext from "../contexts/GlobalContext";
 
 const Login = () => {
@@ -45,6 +44,7 @@ const Login = () => {
           const token = result.user.token;
           localStorage.setItem("authToken", token);
           localStorage.setItem("email", email);
+          localStorage.setItem("userId", result.user._id);
         }
       })
       .catch((err) => setLoading(false));

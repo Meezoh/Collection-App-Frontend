@@ -1,77 +1,113 @@
-import ReactMarkdown from "react-markdown";
 import collectionArr from "../util/collectionTopics";
-import { Link } from "react-router-dom";
-import Table from "react-bootstrap/Table";
-import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import { useNavigate } from "react-router";
 import { useEffect, useState, useContext } from "react";
-import { CgUnblock } from "react-icons/cg";
 import { MdDeleteOutline } from "react-icons/md";
 import GlobalContext from "../contexts/GlobalContext";
+import CollectioForm from "./CollectionForm";
+import CollectionList from "../components/CollectionList";
+import Table from "react-bootstrap/Table";
 
 const Collection = () => {
   const [update, setUpdate] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState(null);
+  const [kollections, setKollections] = useState([]);
+  const [name, setName] = useState("");
+  const [topic, setTopic] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
+  const [active, setActive] = useState(null);
+  const [activeKollectionId, setActiveKollectionId] = useState(null);
+
   const token = localStorage.getItem("authToken");
   const navigate = useNavigate();
-
-  const [kollections, setKollections] = useState([]);
-  const [newName, setNewName] = useState("");
-  const [newTopic, setNewTopic] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newImage, setNewImage] = useState("");
-
   const { userId, kollectionId, setKollectionId, kollection, setKollection } =
     useContext(GlobalContext);
 
-  // const { name, topic, description, image, selected, _id: id } = kollection;
+  const localId = localStorage.getItem("userId");
 
   useEffect(() => {
     if (!token) navigate("/login");
+
+    // localId(localStorage.getItem("userId"));
   }, []);
 
-  const details = { newName, newTopic, newDescription, newImage };
+  const details = { name, topic, description, image };
 
   // Handle form submit
-  const handleCollection = (e) => {
+  const handleSubmitCollection = (e, id) => {
     e.preventDefault();
     setLoading(true);
 
-    fetch("https://item-um.herokuapp.com/api/collections/create/" + userId, {
-      method: "POST",
-      body: JSON.stringify(details),
-      headers: {
-        "x-access-token": token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setLoading(false);
-        setKollectionId(data.newKollection._id);
-        // [...kollections, data.newkollection];
+    if (form == "create") {
+      fetch(
+        localId
+          ? "https://item-um.herokuapp.com/api/collections/create/" + localId
+          : "https://item-um.herokuapp.com/api/collections/create/" + userId,
+        {
+          method: "POST",
+          body: JSON.stringify(details),
+          headers: {
+            "x-access-token": token,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setLoading(false);
+          setKollectionId(data.kollection._id);
+          setForm(null);
+          setKollections([...kollections, data.kollection]);
+          console.log(kollections);
+          // [...kollections, data.newkollection];
+        })
+        .catch((err) => console.log(err));
+    } else if (form == "edit") {
+      const name = details.name == "" ? active.name : details.name;
+      const description =
+        details.description == "" ? active.description : details.description;
+      const topic = details.topic == "" ? active.topic : details.topic;
+      const image = details.image == "" ? active.image : details.image;
+
+      fetch("https://item-um.herokuapp.com/api/collections/" + id, {
+        method: "PATCH",
+        body: JSON.stringify({ ...details, name, description, topic, image }),
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
       })
-      .catch((err) => console.log(err));
+        .then((res) => res.json())
+        .then((result) => {
+          setUpdate(!update);
+          setForm(null);
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   // Load all of User's collections
   useEffect(() => {
-    fetch("https://item-um.herokuapp.com/api/collections/user/" + userId, {
-      headers: { "x-access-token": token },
-    })
+    fetch(
+      localId
+        ? "https://item-um.herokuapp.com/api/collections/user/" + localId
+        : "https://item-um.herokuapp.com/api/collections/user/" + userId,
+      {
+        headers: { "x-access-token": token },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setKollections(data.kollections);
       })
       .catch((err) => console.log(err));
-  }, [userId]);
+  }, [update]);
 
   // Handle Select to update each collection
   const handleSelect = (selected, id) => {
-    console.log(id);
     fetch("https://item-um.herokuapp.com/api/collections/" + id, {
       method: "PATCH",
       body: JSON.stringify({ selected: !selected }),
@@ -84,65 +120,85 @@ const Collection = () => {
       .catch((err) => console.log(err));
   };
 
+  // Handle delete
+  const handleDelete = () => {
+    fetch("https://item-um.herokuapp.com/api/collections/", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", "x-access-token": token },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setUpdate(!update);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // Handle edit collection
+  const handleEditCollection = (id) => {
+    setActive(kollections.find((kollection) => kollection._id == id));
+    setActiveKollectionId(id);
+    setForm("edit");
+  };
+
+  const handleCreateCollection = () => {
+    setForm("create");
+  };
+
+  const handleCancelForm = () => {
+    setForm(null);
+  };
+
+  const handleNameChange = (name) => {
+    setName(name);
+  };
+  const handleDescriptionChange = (description) => {
+    setDescription(description);
+  };
+  const handleTopicChange = (topic) => {
+    setTopic(topic);
+  };
+  const handleImageChange = (image) => {
+    setImage(image);
+  };
+
   return (
     <div className="collection">
       <h1>User Collections</h1>
 
-      <Form className="add-collection" onSubmit={handleCollection}>
-        <Col>
-          <Form.Control
-            className="name"
-            placeholder="Name your collection"
-            onChange={(e) => setNewName(e.target.value)}
-            required
-          />
-        </Col>
+      <>
+        <div className="toolbar">
+          <Button
+            variant="primary"
+            size="lg"
+            active
+            onClick={handleCreateCollection}
+          >
+            New Collection
+          </Button>
+          <Button onClick={handleDelete} type="button" className="btn btn-dark">
+            <MdDeleteOutline size={22} />
+          </Button>
+        </div>
+      </>
 
-        <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
-          <Col sm={13}>
-            <Form.Control
-              autoFocus
-              as="textarea"
-              rows={3}
-              type="text"
-              placeholder="Description"
-              value={newDescription}
-              required
-              onChange={(e) => setNewDescription(e.target.value)}
-            />
-            {/* <ReactMarkdown children={description} /> */}
-          </Col>
-        </Form.Group>
-
-        <Form.Select
-          className="select-collection"
-          aria-label="Default select example"
-          onChange={(e) => setNewTopic(e.target.value)}
-        >
-          <option>Select a topic</option>
-          {collectionArr.map((collection, i) => {
-            return <option key={i}>{collection}</option>;
-          })}
-        </Form.Select>
-
-        <Form.Group
-          as={Row}
-          className="mb-3"
-          controlId="formHorizontalPassword"
-        >
-          <Col sm={13}>
-            <Form.Control
-              type="file"
-              placeholder="Topic"
-              onChange={(e) => setNewImage(e.target.value)}
-            />
-          </Col>
-        </Form.Group>
-
-        <Button disabled={loading ? true : false} type="submit">
-          {loading ? "Loading..." : "Submit"}
-        </Button>
-      </Form>
+      {form && (
+        <CollectioForm
+          handleSubmitCollection={handleSubmitCollection}
+          handleNameChange={handleNameChange}
+          handleDescriptionChange={handleDescriptionChange}
+          handleTopicChange={handleTopicChange}
+          handleImageChange={handleImageChange}
+          active={active}
+          name={name}
+          description={description}
+          topic={topic}
+          image={image}
+          collectionArr={collectionArr}
+          activeKollectionId={activeKollectionId}
+          loading={loading}
+          handleCancelForm={handleCancelForm}
+        />
+      )}
 
       <Table className="table" striped bordered hover size="sm">
         <thead>
@@ -153,28 +209,28 @@ const Collection = () => {
             <th>Topic</th>
             <th>Description</th>
             <th>Image</th>
+            <th>Edit</th>
           </tr>
         </thead>
         <tbody>
           {kollections.map((kollection, i) => {
+            const { name, topic, description, image, selected, _id } =
+              kollection;
+            let num = i + 1;
+
             return (
-              <tr>
-                {/* <Link to="/items"> */}
-                <td>
-                  <div className="mb-3">
-                    <Form.Check
-                      type="checkbox"
-                      // onClick={() => handleSelect(selected, id)}
-                    />
-                  </div>
-                </td>
-                <td>{i + 1}</td>
-                <td>{kollection.name}</td>
-                <td>{kollection.topic}</td>
-                <td>{kollection.description}</td>
-                <td>{kollection.image || null}</td>
-                {/* </Link> */}
-              </tr>
+              <CollectionList
+                key={i}
+                num={num}
+                name={name}
+                topic={topic}
+                description={description}
+                image={image}
+                selected={selected}
+                id={_id}
+                handleSelect={handleSelect}
+                handleEditCollection={handleEditCollection}
+              />
             );
           })}
         </tbody>

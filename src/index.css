@@ -71,13 +71,20 @@ h1 {
 }
 
 .admin-panel,
-.title,
-.collection {
+.title {
   margin: 2rem auto;
   text-align: center;
+}
+
+.collection {
+  margin: 2rem auto;
 }
 
 .check-all {
   background-color: #0d6efd;
   border-color: #0d6efd;
+}
+
+.btn-danger {
+  margin-left: 1rem;
 }
