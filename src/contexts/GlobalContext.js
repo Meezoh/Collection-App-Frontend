@@ -13,18 +13,38 @@ export function GlobalProvider({ children }) {
     updateKollectionId(id);
   };
 
-  const [kollection, updateKollection] = useState(Object);
-  const setKollection = (collection) => {
-    updateKollection(collection);
+  const [signIn, updateSignIn] = useState(true);
+  const setSignIn = (signin) => {
+    updateSignIn(signin);
   };
+
+  const [signOut, updateSignOut] = useState(false);
+  const setSignOut = (signout) => {
+    updateSignOut(signout);
+  };
+  const [showCollection, updateShowCollection] = useState(false);
+  const setShowCollection = (collection) => {
+    updateShowCollection(collection);
+  };
+
+  // const [kollection, updateKollection] = useState(Object);
+  // const setKollection = (collection) => {
+  //   updateKollection(collection);
+  // };
 
   const contexts = {
     userId,
     setUserId,
     kollectionId,
     setKollectionId,
-    kollection,
-    setKollection,
+    signIn,
+    setSignIn,
+    signOut,
+    setSignOut,
+    showCollection,
+    setShowCollection,
+    // kollection,
+    // setKollection,
   };
 
   return (

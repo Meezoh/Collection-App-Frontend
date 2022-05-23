@@ -9,7 +9,7 @@ const CollectioForm = (props) => {
     handleNameChange,
     handleDescriptionChange,
     handleTopicChange,
-    handleImageChange,
+    handleImageUpload,
     active,
     name,
     description,
@@ -41,7 +41,7 @@ const CollectioForm = (props) => {
             as="textarea"
             rows={3}
             type="text"
-            placeholder="Description"
+            placeholder="Description (Markdown Supported)"
             value={active && !description ? active.description : description}
             required
             onChange={(e) => handleDescriptionChange(e.target.value)}
@@ -61,13 +61,12 @@ const CollectioForm = (props) => {
         })}
       </Form.Select>
 
-      <Form.Group as={Row} className="mb-3" controlId="formHorizontalPassword">
+      <Form.Group as={Row} className="mb-3">
         <Col sm={13}>
           <Form.Control
             type="file"
-            placeholder="Image"
-            onChange={(e) => handleImageChange(e.target.value)}
-            value={image}
+            onChange={(e) => handleImageUpload(e.target.files[0])}
+            // value={active && !image ? active.image : image}
           />
         </Col>
       </Form.Group>

@@ -10,14 +10,14 @@ import Items from "./components/Items";
 const App = () => {
   return (
     <div className="App">
-      <NavBar />
       <BrowserRouter>
+        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/items" element={<Items />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/collections" element={<Collection />} />
+          <Route path="/collections/:userId" element={<Collection />} />
           <Route path={"/admin"} element={<AdminPanel />} />
         </Routes>
       </BrowserRouter>

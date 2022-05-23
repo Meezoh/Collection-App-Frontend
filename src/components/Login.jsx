@@ -15,9 +15,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
-
-  const { userId, setUserId } = useContext(GlobalContext);
-
+  const { userId, setUserId, setSignOut, setSignIn, setShowCollection } =
+    useContext(GlobalContext);
   const details = { email, password };
 
   const handleSignin = (e) => {
@@ -45,13 +44,16 @@ const Login = () => {
           localStorage.setItem("authToken", token);
           localStorage.setItem("email", email);
           localStorage.setItem("userId", result.user._id);
+          setSignIn(false);
+          setSignOut(true);
+          setShowCollection(true);
         }
       })
       .catch((err) => setLoading(false));
   };
 
   useEffect(() => {
-    if (userId != null) navigate("/collections");
+    if (userId != null) navigate("/collections/" + userId);
   }, [userId]);
 
   return (
