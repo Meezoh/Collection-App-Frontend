@@ -10,7 +10,7 @@ import GlobalContext from "../contexts/GlobalContext";
 
 const NavBar = () => {
   const userId = localStorage.getItem("userId");
-
+  const role = localStorage.getItem("role");
   const {
     signIn,
     setSignIn,
@@ -18,6 +18,8 @@ const NavBar = () => {
     setSignOut,
     showCollection,
     setShowCollection,
+    showAdmin,
+    setShowAdmin,
   } = useContext(GlobalContext);
 
   const handleSignOut = () => {
@@ -25,11 +27,14 @@ const NavBar = () => {
     window.location.href = "/";
   };
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
     if (userId) {
       setSignIn(false);
       setSignOut(true);
       setShowCollection(true);
+      role == "admin" && setShowAdmin(true);
     }
   }, []);
 
@@ -45,7 +50,9 @@ const NavBar = () => {
               style={{ maxHeight: "100px" }}
               navbarScroll
             >
-              <Nav.Link href="/admin">Admin Panel</Nav.Link>
+              {showAdmin && (
+                <Nav.Link href={"/admin/" + userId}>Admin Panel</Nav.Link>
+              )}
               {signIn && <Nav.Link href="/login">Sign in</Nav.Link>}
               {showCollection && (
                 <Nav.Link href={"/collections/" + userId}>Collections</Nav.Link>

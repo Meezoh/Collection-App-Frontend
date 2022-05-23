@@ -15,8 +15,16 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
-  const { userId, setUserId, setSignOut, setSignIn, setShowCollection } =
-    useContext(GlobalContext);
+  const {
+    role,
+    setRole,
+    userId,
+    setUserId,
+    setSignOut,
+    setSignIn,
+    setShowCollection,
+    setShowAdmin,
+  } = useContext(GlobalContext);
   const details = { email, password };
 
   const handleSignin = (e) => {
@@ -33,6 +41,7 @@ const Login = () => {
       .then((result) => {
         setLoading(false);
         setUserId(result.user._id);
+        setRole(result.user.role);
         if (result.msg) {
           setError(result.msg);
           setShow(true);
@@ -44,6 +53,7 @@ const Login = () => {
           localStorage.setItem("authToken", token);
           localStorage.setItem("email", email);
           localStorage.setItem("userId", result.user._id);
+          localStorage.setItem("role", result.user.role);
           setSignIn(false);
           setSignOut(true);
           setShowCollection(true);
@@ -53,8 +63,15 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (userId != null) navigate("/collections/" + userId);
+    if (userId != null) {
+      navigate("/collections/" + userId);
+    }
   }, [userId]);
+  useEffect(() => {
+    if (role == "admin") {
+      setShowAdmin(true);
+    }
+  }, [role]);
 
   return (
     <div className="Login">

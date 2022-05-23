@@ -36,7 +36,7 @@ const CollectionCard = (props) => {
   // console.log(kollections);
   return (
     <>
-      <Row xs={1} md={3} className="g-4">
+      <Row xs={1} md={2} lg={3} className="g-4">
         {kollections.map((kollection, i) => {
           const {
             name,

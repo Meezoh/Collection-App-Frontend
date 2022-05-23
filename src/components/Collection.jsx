@@ -22,8 +22,6 @@ const Collection = () => {
   const [active, setActive] = useState(null);
   const [activeKollectionId, setActiveKollectionId] = useState(null);
 
-  const [noItems, setNoItems] = useState("");
-
   const token = localStorage.getItem("authToken");
   const navigate = useNavigate();
   const { userId, kollectionId, setKollectionId } = useContext(GlobalContext);
@@ -61,7 +59,7 @@ const Collection = () => {
           setLoading(false);
           setKollectionId(data.kollection._id);
           setForm(null);
-          setKollections([...kollections, data.kollection]);
+          setKollections([data.kollection, ...kollections]);
         })
         .catch((err) => console.log(err));
     } else if (form == "edit") {
@@ -108,7 +106,7 @@ const Collection = () => {
 
   // Handle Select to update each collection
   const handleSelect = (selected, kollectionId) => {
-    console.log(kollectionId);
+    console.log(selected, kollectionId);
     fetch("https://item-um.herokuapp.com/api/collections/" + kollectionId, {
       method: "PATCH",
       body: JSON.stringify({ selected: !selected }),
@@ -123,6 +121,7 @@ const Collection = () => {
 
   // Handle delete
   const handleDelete = () => {
+    console.log(kollectionId);
     fetch("https://item-um.herokuapp.com/api/collections/", {
       method: "DELETE",
       headers: { "Content-Type": "application/json", "x-access-token": token },
@@ -208,7 +207,11 @@ const Collection = () => {
           >
             New Collection
           </Button>
-          <Button onClick={handleDelete} type="button" className="btn btn-dark">
+          <Button
+            onClick={handleDelete}
+            type="button"
+            className="btn btn-dark btn-dark-collection"
+          >
             <MdDeleteOutline size={22} />
           </Button>
         </div>

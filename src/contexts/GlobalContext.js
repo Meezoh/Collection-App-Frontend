@@ -3,6 +3,11 @@ import { createContext, useState } from "react";
 const GlobalContext = createContext();
 
 export function GlobalProvider({ children }) {
+  const [role, updateRole] = useState(null);
+  const setRole = (role) => {
+    updateRole(role);
+  };
+
   const [userId, updateUserId] = useState(null);
   const setUserId = (id) => {
     updateUserId(id);
@@ -22,17 +27,20 @@ export function GlobalProvider({ children }) {
   const setSignOut = (signout) => {
     updateSignOut(signout);
   };
+
   const [showCollection, updateShowCollection] = useState(false);
   const setShowCollection = (collection) => {
     updateShowCollection(collection);
   };
 
-  // const [kollection, updateKollection] = useState(Object);
-  // const setKollection = (collection) => {
-  //   updateKollection(collection);
-  // };
+  const [showAdmin, updateShowAdmin] = useState(false);
+  const setShowAdmin = (user) => {
+    updateShowAdmin(user);
+  };
 
   const contexts = {
+    role,
+    setRole,
     userId,
     setUserId,
     kollectionId,
@@ -43,8 +51,8 @@ export function GlobalProvider({ children }) {
     setSignOut,
     showCollection,
     setShowCollection,
-    // kollection,
-    // setKollection,
+    showAdmin,
+    setShowAdmin,
   };
 
   return (
