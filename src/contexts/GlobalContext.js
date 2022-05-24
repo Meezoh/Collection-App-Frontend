@@ -38,6 +38,16 @@ export function GlobalProvider({ children }) {
     updateShowAdmin(user);
   };
 
+  const [userName, updateUserName] = useState(null);
+  const setUserName = (user) => {
+    updateUserName(user);
+  };
+
+  const [kollection, updateKollection] = useState(null);
+  const setKollection = (k) => {
+    updateKollection(k);
+  };
+
   const contexts = {
     role,
     setRole,
@@ -53,6 +63,10 @@ export function GlobalProvider({ children }) {
     setShowCollection,
     showAdmin,
     setShowAdmin,
+    userName,
+    setUserName,
+    kollection,
+    setKollection,
   };
 
   return (

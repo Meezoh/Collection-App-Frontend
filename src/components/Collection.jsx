@@ -21,22 +21,18 @@ const Collection = () => {
   const [imageSelected, setImageSelected] = useState("");
   const [active, setActive] = useState(null);
   const [activeKollectionId, setActiveKollectionId] = useState(null);
+  const [detailsKollectionId, setDetailsKollectionId] = useState(null);
 
-  const token = localStorage.getItem("authToken");
   const navigate = useNavigate();
-  const { userId, kollectionId, setKollectionId } = useContext(GlobalContext);
-
+  const { userId, kollectionId, setKollectionId, kollection, setKollection } =
+    useContext(GlobalContext);
+  const token = localStorage.getItem("authToken");
   const localId = localStorage.getItem("userId");
-
-  useEffect(() => {
-    if (!token) navigate("/login");
-  }, []);
-
+  const userName = localStorage.getItem("userName");
   const details = { name, topic, description, image };
-  // console.log(image);
 
   // Handle form submit
-  const handleSubmitCollection = (e, kolledtionId) => {
+  const handleSubmitCollection = (e) => {
     e.preventDefault();
     setLoading(true);
 
@@ -67,18 +63,21 @@ const Collection = () => {
       const description =
         details.description == "" ? active.description : details.description;
       const topic = details.topic == "" ? active.topic : details.topic;
-      // const image = details.image == "" ? active.image : details.image;
 
-      fetch("https://item-um.herokuapp.com/api/collections/" + kollectionId, {
-        method: "PATCH",
-        body: JSON.stringify({ ...details, name, description, topic, image }),
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": token,
-        },
-      })
+      fetch(
+        "https://item-um.herokuapp.com/api/collections/" + activeKollectionId,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ ...details, name, description, topic, image }),
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+        }
+      )
         .then((res) => res.json())
         .then((result) => {
+          setLoading(false);
           setUpdate(!update);
           setForm(null);
         })
@@ -142,29 +141,29 @@ const Collection = () => {
   };
 
   // Collection details
-  const handleDetails = (kollectionId) => {
-    console.log(kollectionId);
-    fetch("http://item-um.herokuapp.com/api/items/" + kollectionId, {
+  const handleDetails = (id) => {
+    setDetailsKollectionId(id);
+    fetch("http://item-um.herokuapp.com/api/collections/" + id, {
       headers: { "x-access-token": token },
     })
-      .then((res) => {
-        res.json();
-      })
+      .then((res) => res.json())
       .then((result) => {
-        console.log(result);
-        // navigate("/items/" + kollectionId);
+        setKollection(result.kollection);
+        localStorage.setItem("kollection", JSON.stringify(result.kollection));
       })
       .catch((err) => console.log(err));
   };
 
+  useEffect(() => {
+    if (detailsKollectionId) navigate("/items/" + detailsKollectionId);
+  }, [kollection]);
+
   const handleCreateCollection = () => {
     setForm("create");
   };
-
   const handleCancelForm = () => {
     setForm(null);
   };
-
   const handleNameChange = (name) => {
     setName(name);
   };
@@ -174,11 +173,11 @@ const Collection = () => {
   const handleTopicChange = (topic) => {
     setTopic(topic);
   };
-
   const handleImageUpload = (files) => {
     setImageSelected(files);
   };
 
+  // Upload image to cloudinary
   useEffect(() => {
     if (imageSelected) {
       const formData = new FormData();
@@ -197,7 +196,7 @@ const Collection = () => {
   return (
     <div className="collection">
       <div className="collection-header">
-        <h2 className="collection-title">User Collections</h2>
+        <h2 className="collection-title">{userName} Collections</h2>
         <div className="toolbar">
           <Button
             variant="primary"
@@ -216,15 +215,6 @@ const Collection = () => {
           </Button>
         </div>
       </div>
-
-      {/* {openModal && (
-        <div className="moda">
-          <h1>There are no items </h1>
-          <Button className="btn btn-danger" onClick={setOpenModal(false)}>
-            close
-          </Button>
-        </div>
-      )} */}
 
       {form && (
         <CollectioForm

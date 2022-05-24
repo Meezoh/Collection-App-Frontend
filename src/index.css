@@ -1,9 +1,24 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+:root {
+  --background: #fafafa;
+  --bg-secondary: #fff;
+  --text-primary: #111517;
+  --text-secondary: #c4c4c4;
+  --box-shadow-primary: rgba(0, 0, 0, 0.0532439);
+  --box-shadow-secondary: rgba(0, 0, 0, 0.0294384);
+  --box-shadow-back: rgba(0, 0, 0, 0.293139);
+  --box-shadow-border: rgba(0, 0, 0, 0.104931);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  /* background-color: #fafafa; */
 }
 
 .App {
@@ -95,7 +110,7 @@ h1 {
 
 img {
   max-width: 100%;
-  height: 20rem;
+  height: 15rem;
   margin-bottom: 0.5rem;
 }
 
@@ -103,9 +118,6 @@ img {
   display: flex;
   justify-content: space-evenly;
 }
-/* .collection-title {
-  display: inline-block;
-} */
 .btn-dark-collection {
   margin-left: 2rem;
 }
@@ -115,10 +127,11 @@ img {
   align-self: flex-end;
   margin: 0;
 }
-.collection-header {
+.collection-header,
+.item-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  margin: 2rem 0;
 }
 .signout {
   margin-right: 1rem;
@@ -126,10 +139,34 @@ img {
 .card {
   margin: 1rem 1rem;
 }
+.card-body {
+  max-height: 50%;
+}
 .btn:focus {
   outline: none;
   box-shadow: none;
 }
 .btn {
   margin: 0 0.5rem;
+}
+
+.details {
+  display: flex;
+  justify-content: space-around;
+  max-width: 65%;
+  margin: 3rem auto;
+  align-items: center;
+  background-color: var(--bg-secondary);
+  box-shadow: 0px 0px 7px 2px var(--box-shadow-primary);
+  border-radius: 5px;
+  padding: 1rem;
+}
+.edit {
+  margin-top: 3rem;
+}
+.image {
+  max-width: 40%;
+}
+.items-heading {
+  text-align: center;
 }

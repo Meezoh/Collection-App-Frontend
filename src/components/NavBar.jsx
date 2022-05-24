@@ -7,8 +7,11 @@ import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { useContext, useEffect } from "react";
 import GlobalContext from "../contexts/GlobalContext";
+import { useNavigate } from "react-router";
 
 const NavBar = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("authToken");
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
   const {
@@ -27,7 +30,9 @@ const NavBar = () => {
     window.location.href = "/";
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!token) navigate("/login");
+  }, []);
 
   useEffect(() => {
     if (userId) {

@@ -24,6 +24,8 @@ const Login = () => {
     setSignIn,
     setShowCollection,
     setShowAdmin,
+    userName,
+    setUserName,
   } = useContext(GlobalContext);
   const details = { email, password };
 
@@ -42,6 +44,7 @@ const Login = () => {
         setLoading(false);
         setUserId(result.user._id);
         setRole(result.user.role);
+        // setUserName(result.user.name);
         if (result.msg) {
           setError(result.msg);
           setShow(true);
@@ -54,6 +57,7 @@ const Login = () => {
           localStorage.setItem("email", email);
           localStorage.setItem("userId", result.user._id);
           localStorage.setItem("role", result.user.role);
+          localStorage.setItem("userName", result.user.name);
           setSignIn(false);
           setSignOut(true);
           setShowCollection(true);

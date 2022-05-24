@@ -33,10 +33,9 @@ const CollectionCard = (props) => {
     }
   }, [kollectionId]);
 
-  // console.log(kollections);
   return (
     <>
-      <Row xs={1} md={2} lg={3} className="g-4">
+      <Row xs={1} sm={2} md={3} lg={4} className="g-4">
         {kollections.map((kollection, i) => {
           const {
             name,
@@ -49,37 +48,33 @@ const CollectionCard = (props) => {
           return (
             <Col key={i}>
               <Card className="card">
-                {/* <Card.Header>Header</Card.Header> */}
                 <Card.Img variant="top" src={image} />
                 <div className="check-view">
                   <Form.Check
                     type="checkbox"
                     onClick={() => handleSelect(selected, kollectionId)}
                   />
-                  {/* <Button
+                  <Button
                     variant="secondary"
-                    size="lg"
+                    size="sm"
                     active
                     onClick={() => handleEditCollection(kollectionId)}
                   >
                     Edit
-                  </Button> */}
+                  </Button>
                   <Button
                     variant="primary"
-                    size="md"
+                    size="sm"
                     active
                     onClick={() => handleDetails(kollectionId)}
                   >
                     Details
                   </Button>
                 </div>
-                <Card.Body>
+                <Card.Body className="card-body">
                   <Card.Title>{name}</Card.Title>
                   <Card.Text>{topic}</Card.Text>
-                  <Card.Text>
-                    {/* <ReactMarkdown children={description} /> */}
-                    {description}
-                  </Card.Text>
+                  <ReactMarkdown children={description} />
                 </Card.Body>
                 <Card.Footer>
                   <small className="text-muted">Last updated 3 mins ago</small>

@@ -8,6 +8,7 @@ import { MdDeleteOutline } from "react-icons/md";
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [update, setUpdate] = useState(true);
+  const [activeUserId, setActiveUserId] = useState("");
   const token = localStorage.getItem("authToken");
   const activeUser = localStorage.getItem("email");
   const userId = localStorage.getItem("userId");
@@ -50,9 +51,10 @@ const AdminPanel = () => {
   }, [update]);
 
   // Handle Select to update each collection
-  const handleSelect = (selected, activeUserId) => {
-    console.log(selected, activeUserId);
-    fetch("https://item-um.herokuapp.com/api/users/" + activeUserId, {
+  const handleSelect = (selected, id) => {
+    // console.log(selected, activeUserId);
+    setActiveUserId(id);
+    fetch("https://item-um.herokuapp.com/api/users/" + id, {
       method: "PATCH",
       body: JSON.stringify({ selected: !selected }),
       headers: { "Content-Type": "application/json", "x-access-token": token },
@@ -103,7 +105,21 @@ const AdminPanel = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleAddAdmin = () => {};
+  const handleAddAdmin = () => {
+    console.log(activeUserId);
+    // const role = "role" == user
+    //   fetch("https://item-um.herokuapp.com/api/collections/" + activeUserId, {
+    //     method: "PATCH",
+    //     body: JSON.stringify({}),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "x-access-token": token,
+    //     },
+    //   })
+    //     .then((res) => res.json())
+    //     .then((result) => {})
+    //     .catch((err) => console.log(err));
+  };
   const handleRemoveAdmin = () => {};
 
   return (
