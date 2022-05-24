@@ -31,7 +31,7 @@ const NavBar = () => {
   };
 
   useEffect(() => {
-    if (!token) navigate("/login");
+    if (!token) navigate("/home");
   }, []);
 
   useEffect(() => {
