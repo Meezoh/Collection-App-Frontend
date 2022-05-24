@@ -3,15 +3,12 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
-import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { useContext, useEffect } from "react";
 import GlobalContext from "../contexts/GlobalContext";
 import { useNavigate } from "react-router";
 
 const NavBar = () => {
-  const navigate = useNavigate();
-  const token = localStorage.getItem("authToken");
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
   const {
@@ -31,10 +28,6 @@ const NavBar = () => {
   };
 
   useEffect(() => {
-    if (!token) navigate("/home");
-  }, []);
-
-  useEffect(() => {
     if (userId) {
       setSignIn(false);
       setSignOut(true);
@@ -42,6 +35,13 @@ const NavBar = () => {
       role == "admin" && setShowAdmin(true);
     }
   }, []);
+
+  const handleSearch = (term) => {
+    fetch("http://item-um.herokuapp.com/api/allItems/search/" + term)
+      .then((res) => res.json())
+      .then((result) => {})
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div>
@@ -79,6 +79,7 @@ const NavBar = () => {
                 placeholder="Search"
                 className="me-2"
                 aria-label="Search"
+                onChange={(e) => handleSearch(e.target.value)}
               />
             </Form>
           </Navbar.Collapse>

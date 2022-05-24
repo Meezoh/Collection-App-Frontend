@@ -1,49 +1,43 @@
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router";
 import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import ReactMarkdown from "react-markdown";
 import GlobalContext from "../contexts/GlobalContext";
 import { useContext, useState, useEffect } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import ItemForm from "./ItemForm";
+import ItemCard from "./ItemCard";
+import Axios from "axios";
 
 const Items = () => {
   const [form, setForm] = useState(null);
   const [update, setUpdate] = useState(true);
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState(null);
-  const [itemName, setItemName] = useState("");
-  const [itemTag, setItemTag] = useState("");
-  const [itemImage, setItemImage] = useState("");
+  const [name, setName] = useState("");
+  const [tag, setTag] = useState("");
+  const [image, setImage] = useState("");
   const [imageSelected, setImageSelected] = useState("");
   const [active, setActive] = useState(null);
   const [activeItemId, setActiveItemId] = useState(null);
   const [detailsItemId, setDetailsItemId] = useState(null);
+  const navigate = useNavigate();
+  const { itemId, setItemId, item, setItem } = useContext(GlobalContext);
 
-  const details = { itemName, itemTag, itemImage };
+  const splitTag = tag.split(" ");
+  const details = { name, tag: splitTag, image };
 
   const token = localStorage.getItem("authToken");
   const obj = localStorage.getItem("kollection");
   const userName = localStorage.getItem("userName");
-  const { setToggleModal } = useContext(GlobalContext);
 
   const kollection = JSON.parse(obj);
-  const name = kollection.name;
-  const image = kollection.image;
-  const description = kollection.description;
-  const topic = kollection.topic;
+  const nameKollection = kollection.name;
+  const imageKollection = kollection.image;
+  const descriptionKollection = kollection.description;
+  const topicKollection = kollection.topic;
   const kollectionId = kollection._id;
 
-  // const handleEditCollection = (kollectionId) => {
-  //   console.log(kollectionId);
-  //   setActive(kollections.find((kollection) => kollection._id == kollectionId));
-  //   setActiveKollectionId(kollectionId);
-  //   setForm("edit");
-  // };
-
-  // Load all items
   useEffect(() => {
     if (kollectionId) {
       fetch("http://item-um.herokuapp.com/api/items/" + kollectionId, {
@@ -57,15 +51,14 @@ const Items = () => {
     }
   }, []);
 
-  // Handle form submit
-  const handleSubmitCollection = (e) => {
+  const handleSubmitItem = (e) => {
     e.preventDefault();
     setLoading(true);
 
     if (form == "create") {
-      fetch("url" + kollectionId, {
+      fetch("http://item-um.herokuapp.com/api/items/create/" + kollectionId, {
         method: "POST",
-        body: JSON.stringify(details),
+        body: JSON.stringify({ name, tag }),
         headers: {
           "x-access-token": token,
           "Content-Type": "application/json",
@@ -75,15 +68,18 @@ const Items = () => {
         .then((result) => {
           setLoading(false);
           setForm(null);
+          setItemId(result.item._id);
+          setItems([result.item, ...items]);
+          setUpdate(!update);
         })
         .catch((err) => console.log(err));
     } else if (form == "edit") {
-      const name = details.itemName == "" ? active.itemName : details.itemName;
-      const topic = details.itemTag == "" ? active.itemTag : details.itemTag;
+      const name = details.name == "" ? active.name : details.name;
+      const tag = details.tag == "" ? active.tag : details.tag;
 
-      fetch("url" + activeItemId, {
+      fetch("http://item-um.herokuapp.com/api/items/create/" + activeItemId, {
         method: "PATCH",
-        body: JSON.stringify({ ...details, name, description, topic, image }),
+        body: JSON.stringify({ ...details, name, tag, image }),
         headers: {
           "Content-Type": "application/json",
           "x-access-token": token,
@@ -99,16 +95,84 @@ const Items = () => {
     }
   };
 
-  const handleSelect = (selected, kollectionId) => {};
-  const handleDetails = (kollectionId) => {};
-  const handleDelete = () => {};
+  const handleSelect = (selected, id) => {
+    fetch("https://item-um.herokuapp.com/api/items/" + id, {
+      method: "PATCH",
+      body: JSON.stringify({ selected: !selected }),
+      headers: { "Content-Type": "application/json", "x-access-token": token },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setUpdate(!update);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleDelete = () => {
+    fetch("https://item-um.herokuapp.com/api/items/", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", "x-access-token": token },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setUpdate(!update);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleEditItem = (id) => {
+    setActive(items.find((item) => item._id == id));
+    setActiveItemId(id);
+    setForm("edit");
+  };
+
+  const handleDetails = (id) => {
+    setDetailsItemId(id);
+    fetch("http://item-um.herokuapp.com/api/items/" + id, {
+      headers: { "x-access-token": token },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setItem(result.item);
+        localStorage.setItem("kollection", JSON.stringify(result.kollection));
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    if (detailsItemId) navigate("/items/" + detailsItemId);
+  }, [item]);
+
   const handleCreateItem = () => {
     setForm("create");
   };
-  const handleNameChange = () => {};
-  const handleTagChange = () => {};
-  const handleImageUpload = () => {};
-  const handleCancelForm = () => {};
+  const handleNameChange = (name) => {
+    setName(name);
+  };
+  const handleTagChange = (tag) => {
+    setTag(tag);
+  };
+  const handleCancelForm = () => {
+    setForm(null);
+  };
+  const handleImageUpload = (files) => {
+    setImageSelected(files);
+  };
+
+  useEffect(() => {
+    if (imageSelected) {
+      const formData = new FormData();
+      formData.append("file", imageSelected);
+      formData.append("upload_preset", "ytjjyrko");
+
+      Axios.post(
+        "http://api.cloudinary.com/v1_1/meezoh/image/upload",
+        formData
+      ).then((response) => {
+        setImage(response.data.secure_url);
+      });
+    }
+  }, [imageSelected]);
 
   return (
     <>
@@ -136,85 +200,43 @@ const Items = () => {
 
         <div className="details">
           <div className="image">
-            <Card.Img variant="top" src={image} />
+            <Card.Img variant="top" src={imageKollection} />
           </div>
           <div className="body">
             <Card.Body>
-              <Card.Title>Name: {name}</Card.Title>
-              <Card.Text>Topic: {topic}</Card.Text>
+              <Card.Title>Name: {nameKollection}</Card.Title>
+              <Card.Text>Topic: {topicKollection}</Card.Text>
               Description:
-              <ReactMarkdown children={description} />
+              <ReactMarkdown children={descriptionKollection} />
             </Card.Body>
           </div>
         </div>
 
-        <h2 className="items-heading">Items</h2>
-
-        {items && (
-          <div className="items">
-            <Row xs={1} md={2} lg={3} className="g-4">
-              {items.map((item, i) => {
-                const {
-                  name,
-                  topic,
-                  description,
-                  image,
-                  selected,
-                  _id: kollectionId,
-                } = item;
-                return (
-                  <Col key={i}>
-                    <Card className="card">
-                      <Card.Img variant="top" src={image} />
-                      <div className="check-view">
-                        <Form.Check
-                          type="checkbox"
-                          onClick={() => handleSelect(selected, kollectionId)}
-                        />
-
-                        <Button
-                          variant="primary"
-                          size="md"
-                          active
-                          onClick={() => handleDetails(kollectionId)}
-                        >
-                          Details
-                        </Button>
-                      </div>
-                      <Card.Body>
-                        <Card.Title>{name}</Card.Title>
-                        <Card.Text>{topic}</Card.Text>
-                        <Card.Text>{description}</Card.Text>
-                      </Card.Body>
-                      <Card.Footer>
-                        <small className="text-muted">
-                          Last updated 3 mins ago
-                        </small>
-                      </Card.Footer>
-                    </Card>
-                  </Col>
-                );
-              })}
-            </Row>
-          </div>
+        {form && (
+          <ItemForm
+            handleSubmitItem={handleSubmitItem}
+            handleNameChange={handleNameChange}
+            handleTagChange={handleTagChange}
+            handleImageUpload={handleImageUpload}
+            active={active}
+            itemName={name}
+            itemTag={tag}
+            itemImage={image}
+            activeItemId={activeItemId}
+            loading={loading}
+            handleCancelForm={handleCancelForm}
+          />
         )}
-      </div>
 
-      {form && (
-        <ItemForm
-          handleSubmitCollection={handleSubmitCollection}
-          handleNameChange={handleNameChange}
-          handleTagChange={handleTagChange}
-          handleImageUpload={handleImageUpload}
-          active={active}
-          itemName={itemName}
-          itemTag={itemTag}
-          itemImage={itemImage}
-          activeItemId={activeItemId}
-          loading={loading}
-          handleCancelForm={handleCancelForm}
+        <h2 className="items-heading">Items</h2>
+        <ItemCard
+          items={items}
+          handleSelect={handleSelect}
+          handleEditItem={handleEditItem}
+          itemId={itemId}
+          handleDetails={handleDetails}
         />
-      )}
+      </div>
     </>
   );
 };

@@ -16,7 +16,6 @@ const CollectionCard = (props) => {
   } = props;
   const token = localStorage.getItem("authToken");
 
-  // Change selected to false
   useEffect(() => {
     if (kollectionId) {
       fetch("https://item-um.herokuapp.com/api/collections/" + kollectionId, {

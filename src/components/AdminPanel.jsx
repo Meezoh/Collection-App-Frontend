@@ -21,7 +21,6 @@ const AdminPanel = () => {
   const findUser =
     users.length > 0 && users.find((user) => user.email == activeUser);
 
-  // role == "admin" &&
   useEffect(() => {
     fetch("https://item-um.herokuapp.com/api/users/", {
       headers: { "x-access-token": token },
@@ -39,20 +38,16 @@ const AdminPanel = () => {
         localStorage.removeItem("authToken");
       }
     }
-
     if (findUser == undefined) {
       navigate("/login");
     }
-
     if (findUser && findUser.status == false) {
       localStorage.removeItem("authToken");
       navigate("/login");
     }
   }, [update]);
 
-  // Handle Select to update each collection
   const handleSelect = (selected, id) => {
-    // console.log(selected, activeUserId);
     setActiveUserId(id);
     fetch("https://item-um.herokuapp.com/api/users/" + id, {
       method: "PATCH",
@@ -105,21 +100,7 @@ const AdminPanel = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleAddAdmin = () => {
-    console.log(activeUserId);
-    // const role = "role" == user
-    //   fetch("https://item-um.herokuapp.com/api/collections/" + activeUserId, {
-    //     method: "PATCH",
-    //     body: JSON.stringify({}),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "x-access-token": token,
-    //     },
-    //   })
-    //     .then((res) => res.json())
-    //     .then((result) => {})
-    //     .catch((err) => console.log(err));
-  };
+  const handleAddAdmin = () => {};
   const handleRemoveAdmin = () => {};
 
   return (

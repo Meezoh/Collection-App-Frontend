@@ -66,7 +66,6 @@ const CollectioForm = (props) => {
           <Form.Control
             type="file"
             onChange={(e) => handleImageUpload(e.target.files[0])}
-            // value={active && !image ? active.image : image}
           />
         </Col>
       </Form.Group>

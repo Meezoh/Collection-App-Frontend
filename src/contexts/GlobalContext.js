@@ -18,6 +18,11 @@ export function GlobalProvider({ children }) {
     updateKollectionId(id);
   };
 
+  const [itemId, updateItemId] = useState(null);
+  const setItemId = (id) => {
+    updateItemId(id);
+  };
+
   const [signIn, updateSignIn] = useState(true);
   const setSignIn = (signin) => {
     updateSignIn(signin);
@@ -48,6 +53,11 @@ export function GlobalProvider({ children }) {
     updateKollection(k);
   };
 
+  const [item, updateItem] = useState(null);
+  const setItem = (item) => {
+    updateItem(item);
+  };
+
   const contexts = {
     role,
     setRole,
@@ -67,6 +77,10 @@ export function GlobalProvider({ children }) {
     setUserName,
     kollection,
     setKollection,
+    itemId,
+    setItemId,
+    item,
+    setItem,
   };
 
   return (

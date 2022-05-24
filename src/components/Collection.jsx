@@ -31,7 +31,10 @@ const Collection = () => {
   const userName = localStorage.getItem("userName");
   const details = { name, topic, description, image };
 
-  // Handle form submit
+  useEffect(() => {
+    if (!token) navigate("/");
+  }, []);
+
   const handleSubmitCollection = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -85,7 +88,6 @@ const Collection = () => {
     }
   };
 
-  // Load all of User's collections
   useEffect(() => {
     (localId || userId) &&
       fetch(
@@ -103,7 +105,6 @@ const Collection = () => {
         .catch((err) => console.log(err));
   }, [update]);
 
-  // Handle Select to update each collection
   const handleSelect = (selected, kollectionId) => {
     console.log(selected, kollectionId);
     fetch("https://item-um.herokuapp.com/api/collections/" + kollectionId, {
@@ -118,7 +119,6 @@ const Collection = () => {
       .catch((err) => console.log(err));
   };
 
-  // Handle delete
   const handleDelete = () => {
     console.log(kollectionId);
     fetch("https://item-um.herokuapp.com/api/collections/", {
@@ -132,7 +132,6 @@ const Collection = () => {
       .catch((err) => console.log(err));
   };
 
-  // Handle edit collection
   const handleEditCollection = (kollectionId) => {
     console.log(kollectionId);
     setActive(kollections.find((kollection) => kollection._id == kollectionId));
@@ -140,7 +139,6 @@ const Collection = () => {
     setForm("edit");
   };
 
-  // Collection details
   const handleDetails = (id) => {
     setDetailsKollectionId(id);
     fetch("http://item-um.herokuapp.com/api/collections/" + id, {
@@ -177,7 +175,6 @@ const Collection = () => {
     setImageSelected(files);
   };
 
-  // Upload image to cloudinary
   useEffect(() => {
     if (imageSelected) {
       const formData = new FormData();

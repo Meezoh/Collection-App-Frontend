@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 
 const ItemForm = (props) => {
   const {
-    handleSubmitCollection,
+    handleSubmitItem,
     handleNameChange,
     handleTagChange,
     handleImageUpload,
@@ -22,23 +22,23 @@ const ItemForm = (props) => {
     <div>
       <Form
         className="add-collection "
-        onSubmit={(e) => handleSubmitCollection(e, activeItemId)}
+        onSubmit={(e) => handleSubmitItem(e, activeItemId)}
       >
         <Col>
           <Form.Control
             className="name"
-            placeholder="Name your collection"
+            placeholder="Name your item"
             onChange={(e) => handleNameChange(e.target.value)}
             required
             value={active && !itemName ? active.itemName : itemName}
           />
         </Col>
-        <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+        <Form.Group as={Row} className="mb-3">
           <Col sm={13}>
             <Form.Control
               rows={3}
               type="text"
-              placeholder="Tag"
+              placeholder="Tag (e.g Nature Greenry Adventure)"
               value={active && !itemTag ? active.itemTag : itemTag}
               required
               onChange={(e) => handleTagChange(e.target.value)}

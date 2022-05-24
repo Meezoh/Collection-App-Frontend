@@ -3,11 +3,7 @@
 :root {
   --background: #fafafa;
   --bg-secondary: #fff;
-  --text-primary: #111517;
-  --text-secondary: #c4c4c4;
   --box-shadow-primary: rgba(0, 0, 0, 0.0532439);
-  --box-shadow-secondary: rgba(0, 0, 0, 0.0294384);
-  --box-shadow-back: rgba(0, 0, 0, 0.293139);
   --box-shadow-border: rgba(0, 0, 0, 0.104931);
 }
 
@@ -15,10 +11,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-body {
-  /* background-color: #fafafa; */
 }
 
 .App {
@@ -60,7 +52,7 @@ h1 {
   margin: 5rem auto;
   max-width: 35rem;
   padding: 4rem;
-  border: 3px solid rgb(146, 142, 142);
+  border: 3px solid var(--box-shadow-border);
   border-radius: 1rem;
 }
 .select-collection {
@@ -169,4 +161,9 @@ img {
 }
 .items-heading {
   text-align: center;
+}
+
+ul {
+  padding-left: 0;
+  list-style: none;
 }
