@@ -4,11 +4,12 @@ import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../contexts/GlobalContext";
-import { useNavigate } from "react-router";
+import Search from "./Search";
 
 const NavBar = () => {
+  const [searchItems, setSearchItems] = useState(null);
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
   const {
@@ -39,15 +40,17 @@ const NavBar = () => {
   const handleSearch = (term) => {
     fetch("http://item-um.herokuapp.com/api/allItems/search/" + term)
       .then((res) => res.json())
-      .then((result) => {})
+      .then((result) => {
+        setSearchItems(result.search);
+      })
       .catch((err) => console.log(err));
   };
 
   return (
-    <div>
+    <nav>
       <Navbar bg="light" expand="lg">
         <Container fluid>
-          <Navbar.Brand href="/">Item Collection App</Navbar.Brand>
+          <Navbar.Brand>Item Collection App</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
             <Nav
@@ -55,6 +58,7 @@ const NavBar = () => {
               style={{ maxHeight: "100px" }}
               navbarScroll
             >
+              <Nav.Link href="/">Home</Nav.Link>
               {showAdmin && (
                 <Nav.Link href={"/admin/" + userId}>Admin Panel</Nav.Link>
               )}
@@ -85,7 +89,9 @@ const NavBar = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-    </div>
+
+      <Search searchItems={searchItems} />
+    </nav>
   );
 };
 

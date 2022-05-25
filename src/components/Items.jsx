@@ -126,22 +126,20 @@ const Items = () => {
     setForm("edit");
   };
 
-  const handleDetails = (id) => {
-    setDetailsItemId(id);
-    fetch("http://item-um.herokuapp.com/api/items/" + id, {
-      headers: { "x-access-token": token },
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        setItem(result.item);
-        localStorage.setItem("kollection", JSON.stringify(result.kollection));
-      })
-      .catch((err) => console.log(err));
-  };
+  // const handleDetails = (id) => {
+  //   setDetailsItemId(id);
+  //   fetch("http://item-um.herokuapp.com/api/items/" + id)
+  //     .then((res) => res.json())
+  //     .then((result) => {
+  //       setItem(result.item);
+  //       localStorage.setItem("kollection", JSON.stringify(result.kollection));
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
-  useEffect(() => {
-    if (detailsItemId) navigate("/items/" + detailsItemId);
-  }, [item]);
+  // useEffect(() => {
+  //   if (detailsItemId) navigate("/items/" + detailsItemId);
+  // }, [item]);
 
   const handleCreateItem = () => {
     setForm("create");
@@ -234,7 +232,7 @@ const Items = () => {
           handleSelect={handleSelect}
           handleEditItem={handleEditItem}
           itemId={itemId}
-          handleDetails={handleDetails}
+          // handleDetails={handleDetails}
         />
       </div>
     </>

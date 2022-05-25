@@ -54,7 +54,7 @@ const ItemCard = (props) => {
                         variant="primary"
                         size="md"
                         active
-                        onClick={() => handleDetails(itemId)}
+                        // onClick={() => handleDetails(itemId)}
                       >
                         Details
                       </Button>
