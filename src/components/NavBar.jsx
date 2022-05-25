@@ -35,7 +35,7 @@ const NavBar = () => {
       setShowCollection(true);
       role == "admin" && setShowAdmin(true);
     }
-  }, []);
+  });
 
   const handleSearch = (term) => {
     fetch("http://item-um.herokuapp.com/api/allItems/search/" + term)
