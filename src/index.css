@@ -162,8 +162,10 @@ img {
 .items-heading {
   text-align: center;
 }
-
 ul {
   padding-left: 0;
   list-style: none;
+}
+.search-header {
+  margin-top: 2rem;
 }

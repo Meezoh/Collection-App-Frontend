@@ -4,12 +4,11 @@ import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import GlobalContext from "../contexts/GlobalContext";
 import Search from "./Search";
 
 const NavBar = () => {
-  const [searchItems, setSearchItems] = useState(null);
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
   const {
@@ -21,6 +20,8 @@ const NavBar = () => {
     setShowCollection,
     showAdmin,
     setShowAdmin,
+    searchItems,
+    setSearchItems,
   } = useContext(GlobalContext);
 
   const handleSignOut = () => {
@@ -42,6 +43,7 @@ const NavBar = () => {
       .then((res) => res.json())
       .then((result) => {
         setSearchItems(result.search);
+        // console.log(result.search);
       })
       .catch((err) => console.log(err));
   };
@@ -89,7 +91,6 @@ const NavBar = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-
       <Search searchItems={searchItems} />
     </nav>
   );

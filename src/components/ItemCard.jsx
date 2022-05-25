@@ -30,7 +30,7 @@ const ItemCard = (props) => {
     <div>
       {items && (
         <div className="items">
-          <Row xs={1} md={2} lg={3} className="g-4">
+          <Row xs={1} sm={2} md={3} lg={4} className="g-4">
             {items.map((item, i) => {
               const { name, tag, image, selected, _id: itemId } = item;
               return (

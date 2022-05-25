@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 
-const GlobalContext = createContext();
+const GlobalContext = createContext(); // src\contexts\GlobalContext.js
 
 export function GlobalProvider({ children }) {
   const [role, updateRole] = useState(null);
@@ -58,6 +58,11 @@ export function GlobalProvider({ children }) {
     updateItem(item);
   };
 
+  const [searchItems, updateSearchItems] = useState(null);
+  const setSearchItems = (items) => {
+    updateSearchItems(items);
+  };
+
   const contexts = {
     role,
     setRole,
@@ -81,6 +86,8 @@ export function GlobalProvider({ children }) {
     setItemId,
     item,
     setItem,
+    searchItems,
+    setSearchItems,
   };
 
   return (

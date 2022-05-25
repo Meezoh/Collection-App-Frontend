@@ -23,8 +23,14 @@ const Collection = () => {
   const [detailsKollectionId, setDetailsKollectionId] = useState(null);
 
   const navigate = useNavigate();
-  const { userId, kollectionId, setKollectionId, kollection, setKollection } =
-    useContext(GlobalContext);
+  const {
+    userId,
+    kollectionId,
+    setKollectionId,
+    kollection,
+    setKollection,
+    searchItems,
+  } = useContext(GlobalContext);
   const token = localStorage.getItem("authToken");
   const localId = localStorage.getItem("userId");
   const userName = localStorage.getItem("userName");
@@ -32,7 +38,7 @@ const Collection = () => {
 
   useEffect(() => {
     if (!token) navigate("/");
-  }, []);
+  });
 
   const handleSubmitCollection = (e) => {
     e.preventDefault();
@@ -190,54 +196,56 @@ const Collection = () => {
   }, [imageSelected]);
 
   return (
-    <div className="collection">
-      <div className="collection-header">
-        <h2 className="collection-title">{userName} Collections</h2>
-        <div className="toolbar">
-          <Button
-            variant="primary"
-            size="lg"
-            active
-            onClick={handleCreateCollection}
-          >
-            New Collection
-          </Button>
-          <Button
-            onClick={handleDelete}
-            type="button"
-            className="btn btn-dark btn-dark-collection"
-          >
-            <MdDeleteOutline size={22} />
-          </Button>
+    <>
+      <div className="collection">
+        <div className="collection-header">
+          <h2 className="collection-title">{userName} Collections</h2>
+          <div className="toolbar">
+            <Button
+              variant="primary"
+              size="lg"
+              active
+              onClick={handleCreateCollection}
+            >
+              New Collection
+            </Button>
+            <Button
+              onClick={handleDelete}
+              type="button"
+              className="btn btn-dark btn-dark-collection"
+            >
+              <MdDeleteOutline size={22} />
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {form && (
-        <CollectioForm
-          handleSubmitCollection={handleSubmitCollection}
-          handleNameChange={handleNameChange}
-          handleDescriptionChange={handleDescriptionChange}
-          handleTopicChange={handleTopicChange}
-          handleImageUpload={handleImageUpload}
-          active={active}
-          name={name}
-          description={description}
-          topic={topic}
-          image={image}
-          collectionArr={collectionArr}
-          activeKollectionId={activeKollectionId}
-          loading={loading}
-          handleCancelForm={handleCancelForm}
+        {form && (
+          <CollectioForm
+            handleSubmitCollection={handleSubmitCollection}
+            handleNameChange={handleNameChange}
+            handleDescriptionChange={handleDescriptionChange}
+            handleTopicChange={handleTopicChange}
+            handleImageUpload={handleImageUpload}
+            active={active}
+            name={name}
+            description={description}
+            topic={topic}
+            image={image}
+            collectionArr={collectionArr}
+            activeKollectionId={activeKollectionId}
+            loading={loading}
+            handleCancelForm={handleCancelForm}
+          />
+        )}
+        <CollectionCard
+          kollections={kollections}
+          handleSelect={handleSelect}
+          handleEditCollection={handleEditCollection}
+          kollectionId={kollectionId}
+          handleDetails={handleDetails}
         />
-      )}
-      <CollectionCard
-        kollections={kollections}
-        handleSelect={handleSelect}
-        handleEditCollection={handleEditCollection}
-        kollectionId={kollectionId}
-        handleDetails={handleDetails}
-      />
-    </div>
+      </div>
+    </>
   );
 };
 

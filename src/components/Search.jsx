@@ -1,26 +1,25 @@
-import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { useEffect } from "react";
 
 const Search = ({ searchItems }) => {
-  // const { name, image, tag,  } = searchItems;
-
   const searchCount = searchItems ? searchItems.length : 0;
+  const s = searchItems && searchItems.length > 1 ? "s" : "";
 
   return (
     <div className="Search">
       {searchItems && (
         <div className="container">
-          <header>
-            <h3>Products Found</h3>
-            <p className="items-count">{searchCount} Products</p>
+          <header className="search-header">
+            <h3>Items Found</h3>
+            <p className="items-count">
+              {searchCount} Item{s}
+            </p>
           </header>
 
           <article>
-            <Row xs={1} md={2} lg={3} className="g-4">
+            <Row xs={1} sm={2} md={3} lg={4} className="g-4">
               {searchItems.map((item, i) => {
                 const { name, tag, image, _id: itemId } = item;
                 return (
