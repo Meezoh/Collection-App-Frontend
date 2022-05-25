@@ -40,7 +40,7 @@ const Items = () => {
 
   useEffect(() => {
     if (kollectionId) {
-      fetch("http://item-um.herokuapp.com/api/items/" + kollectionId, {
+      fetch("https://item-um.herokuapp.com/api/items/" + kollectionId, {
         headers: { "x-access-token": token },
       })
         .then((res) => res.json())
@@ -56,7 +56,7 @@ const Items = () => {
     setLoading(true);
 
     if (form == "create") {
-      fetch("http://item-um.herokuapp.com/api/items/create/" + kollectionId, {
+      fetch("https://item-um.herokuapp.com/api/items/create/" + kollectionId, {
         method: "POST",
         body: JSON.stringify({ name, tag }),
         headers: {
@@ -77,7 +77,7 @@ const Items = () => {
       const name = details.name == "" ? active.name : details.name;
       const tag = details.tag == "" ? active.tag : details.tag;
 
-      fetch("http://item-um.herokuapp.com/api/items/create/" + activeItemId, {
+      fetch("https://item-um.herokuapp.com/api/items/create/" + activeItemId, {
         method: "PATCH",
         body: JSON.stringify({ ...details, name, tag, image }),
         headers: {
@@ -128,7 +128,7 @@ const Items = () => {
 
   // const handleDetails = (id) => {
   //   setDetailsItemId(id);
-  //   fetch("http://item-um.herokuapp.com/api/items/" + id)
+  //   fetch("https://item-um.herokuapp.com/api/items/" + id)
   //     .then((res) => res.json())
   //     .then((result) => {
   //       setItem(result.item);
@@ -164,7 +164,7 @@ const Items = () => {
       formData.append("upload_preset", "ytjjyrko");
 
       Axios.post(
-        "http://api.cloudinary.com/v1_1/meezoh/image/upload",
+        "https://api.cloudinary.com/v1_1/meezoh/image/upload",
         formData
       ).then((response) => {
         setImage(response.data.secure_url);

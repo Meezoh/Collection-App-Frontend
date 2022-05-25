@@ -38,7 +38,7 @@ const NavBar = () => {
   });
 
   const handleSearch = (term) => {
-    fetch("http://item-um.herokuapp.com/api/allItems/search/" + term)
+    fetch("https://item-um.herokuapp.com/api/allItems/search/" + term)
       .then((res) => res.json())
       .then((result) => {
         setSearchItems(result.search);

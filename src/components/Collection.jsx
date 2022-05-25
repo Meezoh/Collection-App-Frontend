@@ -7,7 +7,6 @@ import GlobalContext from "../contexts/GlobalContext";
 import CollectioForm from "./CollectionForm";
 import Axios from "axios";
 import CollectionCard from "./CollectionCard";
-import ReactMarkdown from "react-markdown";
 
 const Collection = () => {
   const [update, setUpdate] = useState(true);
@@ -141,7 +140,7 @@ const Collection = () => {
 
   const handleDetails = (id) => {
     setDetailsKollectionId(id);
-    fetch("http://item-um.herokuapp.com/api/collections/" + id, {
+    fetch("https://item-um.herokuapp.com/api/collections/" + id, {
       headers: { "x-access-token": token },
     })
       .then((res) => res.json())
@@ -182,7 +181,7 @@ const Collection = () => {
       formData.append("upload_preset", "ytjjyrko");
 
       Axios.post(
-        "http://api.cloudinary.com/v1_1/meezoh/image/upload",
+        "https://api.cloudinary.com/v1_1/meezoh/image/upload",
         formData
       ).then((response) => {
         setImage(response.data.secure_url);
