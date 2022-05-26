@@ -14,8 +14,10 @@ const Items = () => {
   const [update, setUpdate] = useState(true);
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState(null);
+  // const [activeItemName, setActiveItemName] = useState("");
+  const [imageUploading, setImageUploading] = useState(false);
   const [name, setName] = useState("");
-  const [tag, setTag] = useState("");
+  const [tag, setTag] = useState([]);
   const [image, setImage] = useState("");
   const [imageSelected, setImageSelected] = useState("");
   const [active, setActive] = useState(null);
@@ -24,8 +26,7 @@ const Items = () => {
   const navigate = useNavigate();
   const { itemId, setItemId, item, setItem } = useContext(GlobalContext);
 
-  const splitTag = tag.split(" ");
-  const details = { name, tag: splitTag, image };
+  const details = { name, tag, image };
 
   const token = localStorage.getItem("authToken");
   const obj = localStorage.getItem("kollection");
@@ -51,14 +52,14 @@ const Items = () => {
     }
   }, []);
 
-  const handleSubmitItem = (e) => {
+  const handleSubmitItem = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     if (form == "create") {
       fetch("https://item-um.herokuapp.com/api/items/create/" + kollectionId, {
         method: "POST",
-        body: JSON.stringify({ name, tag }),
+        body: JSON.stringify(details),
         headers: {
           "x-access-token": token,
           "Content-Type": "application/json",
@@ -120,41 +121,38 @@ const Items = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleEditItem = (id) => {
+  const handleEditItem = async (id) => {
     setActive(items.find((item) => item._id == id));
     setActiveItemId(id);
     setForm("edit");
   };
 
-  // const handleDetails = (id) => {
-  //   setDetailsItemId(id);
-  //   fetch("https://item-um.herokuapp.com/api/items/" + id)
-  //     .then((res) => res.json())
-  //     .then((result) => {
-  //       setItem(result.item);
-  //       localStorage.setItem("kollection", JSON.stringify(result.kollection));
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-  // useEffect(() => {
-  //   if (detailsItemId) navigate("/items/" + detailsItemId);
-  // }, [item]);
-
   const handleCreateItem = () => {
     setForm("create");
   };
+
   const handleNameChange = (name) => {
     setName(name);
   };
-  const handleTagChange = (tag) => {
-    setTag(tag);
-  };
+
   const handleCancelForm = () => {
     setForm(null);
   };
+
   const handleImageUpload = (files) => {
     setImageSelected(files);
+    setImageUploading(true);
+  };
+
+  const removeTags = (indexToRemove) => {
+    setTag([...tag.filter((_, index) => index !== indexToRemove)]);
+  };
+
+  const addTags = (e) => {
+    if (e.target.value !== "") {
+      setTag([...tag, e.target.value]);
+      e.target.value = "";
+    }
   };
 
   useEffect(() => {
@@ -168,9 +166,14 @@ const Items = () => {
         formData
       ).then((response) => {
         setImage(response.data.secure_url);
+        setImageUploading(false);
       });
     }
   }, [imageSelected]);
+
+  useEffect(() => {
+    setImageUploading(false);
+  }, [image]);
 
   return (
     <>
@@ -212,17 +215,19 @@ const Items = () => {
 
         {form && (
           <ItemForm
+            removeTags={removeTags}
+            addTags={addTags}
             handleSubmitItem={handleSubmitItem}
             handleNameChange={handleNameChange}
-            handleTagChange={handleTagChange}
             handleImageUpload={handleImageUpload}
             active={active}
-            itemName={name}
-            itemTag={tag}
-            itemImage={image}
+            name={name}
+            tag={tag}
+            image={image}
             activeItemId={activeItemId}
             loading={loading}
             handleCancelForm={handleCancelForm}
+            imageUploading={imageUploading}
           />
         )}
 

@@ -19,7 +19,14 @@ const CollectioForm = (props) => {
     activeKollectionId,
     loading,
     handleCancelForm,
+    imageUploading,
   } = props;
+
+  let buttonMode = "";
+  if (loading) buttonMode = "Loading...";
+  else if (imageUploading) buttonMode = "Image Uploading...";
+  else buttonMode = "Submit";
+
   return (
     <Form
       className="add-collection "
@@ -70,8 +77,8 @@ const CollectioForm = (props) => {
         </Col>
       </Form.Group>
 
-      <Button disabled={loading ? true : false} type="submit">
-        {loading ? "Loading..." : "Submit"}
+      <Button disabled={loading || imageUploading ? true : false} type="submit">
+        {buttonMode}
       </Button>
       <Button className="btn btn-danger" onClick={handleCancelForm}>
         Close

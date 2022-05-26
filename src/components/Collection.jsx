@@ -21,6 +21,7 @@ const Collection = () => {
   const [active, setActive] = useState(null);
   const [activeKollectionId, setActiveKollectionId] = useState(null);
   const [detailsKollectionId, setDetailsKollectionId] = useState(null);
+  const [imageUploading, setImageUploading] = useState(false);
 
   const navigate = useNavigate();
   const {
@@ -178,6 +179,7 @@ const Collection = () => {
   };
   const handleImageUpload = (files) => {
     setImageSelected(files);
+    setImageUploading(true);
   };
 
   useEffect(() => {
@@ -191,9 +193,14 @@ const Collection = () => {
         formData
       ).then((response) => {
         setImage(response.data.secure_url);
+        setImageUploading(false);
       });
     }
   }, [imageSelected]);
+
+  useEffect(() => {
+    setImageUploading(false);
+  }, [image]);
 
   return (
     <>
@@ -235,6 +242,7 @@ const Collection = () => {
             activeKollectionId={activeKollectionId}
             loading={loading}
             handleCancelForm={handleCancelForm}
+            imageUploading={imageUploading}
           />
         )}
         <CollectionCard
